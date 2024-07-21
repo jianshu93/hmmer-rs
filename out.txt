@@ -1,0 +1,1 @@
+HMM	Score	Nreported	Hit Name	Domain Score	E-value

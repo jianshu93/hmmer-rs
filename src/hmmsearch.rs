@@ -513,3 +513,4 @@ impl HmmsearchResultDomain {
         unsafe { (*self.c_dom).lnP.exp() * (*self.c_pli).Z }
     }
 }
+

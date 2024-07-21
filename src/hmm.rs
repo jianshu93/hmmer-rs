@@ -21,7 +21,7 @@ impl Hmm {
         // Open file
         let mut hfp: *mut libhmmer_sys::P7_HMMFILE = std::ptr::null_mut();
         let status1 = unsafe {
-            libhmmer_sys::p7_hmmfile_OpenE(hmmfile, std::ptr::null_mut(), &mut hfp, errbuf)
+            libhmmer_sys::p7_hmmfile_Open(hmmfile, std::ptr::null_mut(), &mut hfp, errbuf)
         };
         // eslOK = 0
         if status1 != 0 {

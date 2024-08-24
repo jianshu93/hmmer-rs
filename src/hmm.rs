@@ -3,14 +3,14 @@ use std::ffi::CStr;
 use std::ffi::CString;
 
 pub struct Hmm {
-    pub c_hmm: *mut libhmmer_sys::P7_HMM,
+    pub c_hmm: *mut libhmmer_sys_2::P7_HMM,
 }
 
 impl Hmm {
     pub fn read_hmms_from_path(path: &std::path::Path) -> Result<Vec<Hmm>, &'static str> {
         // char          errbuf[eslERRBUFSIZE];
         #[allow(unused_mut)]
-        let mut errbuf = CString::new(vec![1; libhmmer_sys::eslERRBUFSIZE as usize])
+        let mut errbuf = CString::new(vec![1; libhmmer_sys_2::eslERRBUFSIZE as usize])
             .unwrap()
             .into_raw();
 
@@ -19,9 +19,9 @@ impl Hmm {
             .into_raw();
 
         // Open file
-        let mut hfp: *mut libhmmer_sys::P7_HMMFILE = std::ptr::null_mut();
+        let mut hfp: *mut libhmmer_sys_2::P7_HMMFILE = std::ptr::null_mut();
         let status1 = unsafe {
-            libhmmer_sys::p7_hmmfile_Open(hmmfile, std::ptr::null_mut(), &mut hfp, errbuf)
+            libhmmer_sys_2::p7_hmmfile_Open(hmmfile, std::ptr::null_mut(), &mut hfp, errbuf)
         };
         // eslOK = 0
         if status1 != 0 {
@@ -35,12 +35,12 @@ impl Hmm {
         loop {
             // ESL_ALPHABET *abc     = NULL;	/* alphabet (set from the HMM file)*/
             // Set to NULL to not force alphabet
-            let mut abc: *mut libhmmer_sys::ESL_ALPHABET = std::ptr::null_mut();
+            let mut abc: *mut libhmmer_sys_2::ESL_ALPHABET = std::ptr::null_mut();
             // P7_HMM       *hmm     = NULL;
-            let mut hmm: *mut libhmmer_sys::P7_HMM = std::ptr::null_mut();
+            let mut hmm: *mut libhmmer_sys_2::P7_HMM = std::ptr::null_mut();
 
-            let status2 = unsafe { libhmmer_sys::p7_hmmfile_Read(hfp, &mut abc, &mut hmm) };
-            if status2 == libhmmer_sys::eslEOF as i32 {
+            let status2 = unsafe { libhmmer_sys_2::p7_hmmfile_Read(hfp, &mut abc, &mut hmm) };
+            if status2 == libhmmer_sys_2::eslEOF as i32 {
                 debug!("EOF reached");
                 break;
             } else if status2 != 0 {
@@ -60,7 +60,7 @@ impl Hmm {
         Ok(hmms)
     }
 
-    pub fn c_alphabet(&self) -> *const libhmmer_sys::ESL_ALPHABET {
+    pub fn c_alphabet(&self) -> *const libhmmer_sys_2::ESL_ALPHABET {
         unsafe { (*self.c_hmm).abc }
     }
 
@@ -98,7 +98,7 @@ impl Hmm {
 impl Drop for Hmm {
     fn drop(&mut self) {
         unsafe {
-            libhmmer_sys::p7_hmm_Destroy(self.c_hmm);
+            libhmmer_sys_2::p7_hmm_Destroy(self.c_hmm);
         }
     }
 }

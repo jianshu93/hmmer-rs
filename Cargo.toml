@@ -1,18 +1,19 @@
 [package]
-name = "hmmer-rs"
-version = "0.2.0"
+name = "hmmer-rs-2"
+version = "0.2.1"
 edition = "2021"
-authors = ["Ben Woodcroft <benjwoodcroft@gmail.com>"]
+authors = ["Jianshu Zhao"]
 license = "GPL-3.0"
 description = "Ergonomic Rust interface to HMMER"
-homepage = "https://github.com/wwood/hmmer-rs"
-repository = "https://github.com/wwood/hmmer-rs"
-documentation = "https://github.com/wwood/hmmer-rs"
+homepage = "https://github.com/jianshu93/hmmer-rs"
+repository = "https://github.com/jianshu93/hmmer-rs"
+documentation = "https://github.com/jianshu93/hmmer-rs"
 readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-libhmmer-sys = {git = "https://github.com/jianshu93/libhmmer-sys"}
+##libhmmer-sys = {git = "https://github.com/jianshu93/libhmmer-sys"}
+libhmmer-sys-2 = "0.1.0"
 libc = "0.2.*"
 log = "0.4.*"

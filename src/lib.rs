@@ -17,24 +17,24 @@ pub enum Alphabet {
 
 pub struct EaselSequence {
     // TODO: Implement Drop trait to free this
-    pub c_sq: *mut libhmmer_sys::ESL_SQ,
+    pub c_sq: *mut libhmmer_sys_2::ESL_SQ,
 }
 
 impl EaselSequence {
     pub fn new(alphabet: Alphabet) -> Self {
         let c_alphabet = match alphabet {
-            // *const libhmmer_sys::ESL_ALPHABET
+            // *const libhmmer_sys_2::ESL_ALPHABET
             Alphabet::Protein => unsafe {
-                libhmmer_sys::esl_alphabet_Create(libhmmer_sys::eslAMINO.try_into().unwrap())
+                libhmmer_sys_2::esl_alphabet_Create(libhmmer_sys_2::eslAMINO.try_into().unwrap())
             },
             Alphabet::RNA => unsafe {
-                libhmmer_sys::esl_alphabet_Create(libhmmer_sys::eslRNA.try_into().unwrap())
+                libhmmer_sys_2::esl_alphabet_Create(libhmmer_sys_2::eslRNA.try_into().unwrap())
             },
             Alphabet::DNA => unsafe {
-                libhmmer_sys::esl_alphabet_Create(libhmmer_sys::eslDNA.try_into().unwrap())
+                libhmmer_sys_2::esl_alphabet_Create(libhmmer_sys_2::eslDNA.try_into().unwrap())
             },
         };
-        let c_sq = unsafe { libhmmer_sys::esl_sq_CreateDigital(c_alphabet) };
+        let c_sq = unsafe { libhmmer_sys_2::esl_sq_CreateDigital(c_alphabet) };
         Self { c_sq }
     }
 
@@ -79,10 +79,10 @@ impl EaselSequence {
         Ok(())
     }
 
-    // Reimplementation of libhmmer_sys::esl_abc_Digitize but don't require a
+    // Reimplementation of libhmmer_sys_2::esl_abc_Digitize but don't require a
     // NULL terminated sequence as input. Assumes self.dsq is already allocated.
     fn digitise_sequence(&mut self, seq: &[u8]) -> Result<(), &'static str> {
-        // let sstatus = libhmmer_sys::esl_abc_Digitize((*self.c_sq).abc, seq.as_ptr() as *const i8, (*self.c_sq).dsq);
+        // let sstatus = libhmmer_sys_2::esl_abc_Digitize((*self.c_sq).abc, seq.as_ptr() as *const i8, (*self.c_sq).dsq);
 
         // int     status;
         // int64_t i;			/* position in seq */
@@ -109,7 +109,7 @@ impl EaselSequence {
 
         // Set initial sentinal
         unsafe {
-            *(*self.c_sq).dsq = libhmmer_sys::eslDSQ_SENTINEL as u8;
+            *(*self.c_sq).dsq = libhmmer_sys_2::eslDSQ_SENTINEL as u8;
         };
 
         // Set actual sequence
@@ -122,7 +122,7 @@ impl EaselSequence {
                 unsafe {
                     *(*self.c_sq).dsq.add(i + 1) = x;
                 };
-            } else if x == libhmmer_sys::eslDSQ_IGNORED as u8 {
+            } else if x == libhmmer_sys_2::eslDSQ_IGNORED as u8 {
                 continue;
             } else {
                 return Err("Invalid character in sequence");
@@ -132,7 +132,7 @@ impl EaselSequence {
         // Set final sentinal
         unsafe {
             *((*self.c_sq).dsq.offset(seq.len() as isize + 1)) =
-                libhmmer_sys::eslDSQ_SENTINEL as u8;
+                libhmmer_sys_2::eslDSQ_SENTINEL as u8;
         };
 
         Ok(())
@@ -181,7 +181,7 @@ impl Debug for EaselSequence {
                 .field("dsq ptr", &(*self.c_sq).dsq)
                 .field(
                     "dsq length",
-                    &libhmmer_sys::esl_abc_dsqlen((*self.c_sq).dsq),
+                    &libhmmer_sys_2::esl_abc_dsqlen((*self.c_sq).dsq),
                 )
                 .field("tax_id", &(*self.c_sq).tax_id)
                 // .field("seq", &CStr::from_ptr((*self.c_sq).seq).to_string_lossy())
@@ -200,7 +200,7 @@ impl Debug for EaselSequence {
 impl Drop for EaselSequence {
     fn drop(&mut self) {
         unsafe {
-            libhmmer_sys::esl_sq_Destroy(self.c_sq);
+            libhmmer_sys_2::esl_sq_Destroy(self.c_sq);
         }
     }
 }
